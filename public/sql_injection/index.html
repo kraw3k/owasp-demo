@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL injection demo</title>
+  <style>
+    .bg-code {
+      background-color: #ffd7d7;
+      border-radius: 0.2em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Login Page - <small>SQL injection demo</small></h1>
+  <form id="loginForm" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="password"><br><br>
+    <button type="submit">Login</button>
+  </form>
+  <br />
+  <div id="result"></div>
+
+  <br />
+  <pre>
+    <strong>Normal credentials:</strong>
+    Username: <span class="bg-code">john_doe</span>
+    Password: <span class="bg-code">password123</span>
+  </pre>
+
+  <pre>
+    <strong>SQL Injection - example 1:</strong>
+    Username: <span class="bg-code">' OR 1=1 --</span>
+    Password: <span class="bg-code">anything</span>
+  </pre>
+
+  <pre>
+    <strong>SQL Injection - example 2:</strong>
+    Username: <span class="bg-code">john_doe</span>
+    Password: <span class="bg-code">' OR 1=1 --</span>
+  </pre>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: formData.get('username'),
+          password: formData.get('password')
+        })
+      })
+        .then(response => response.json())
+        .then(data => {
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = JSON.stringify(data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = 'Error occurred while logging in';
+        });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Victim Page</title>
+</head>
+<body>
+  <h1>Change Password Form</h1>
+  <form id="changePasswordForm" method="post">
+    <label for="newPassword">New Password:</label><br>
+    <input type="password" id="newPassword" name="newPassword"><br>
+    <button type="submit">Change Password</button>
+  </form>
+
+  <script>
+    document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form submission for demonstration purposes
+      const newPassword = document.getElementById('newPassword').value;
+      const formData = { newPassword }; // Create JSON object with newPassword field
+      fetch('/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+    });
+  </script>
+</body>
+</html>

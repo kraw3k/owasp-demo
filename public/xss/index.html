@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS Attack Demo</title>
+</head>
+
+<body>
+    <h1>XSS Attack Demo</h1>
+
+    <!-- Formularz do wprowadzania danych -->
+    <form id="commentForm">
+        <label for="comment">Dodaj komentarz:</label><br />
+        <input type="text" id="comment" name="comment" /><br />
+        <button type="submit">Dodaj</button>
+    </form>
+
+    <!-- Kontener na komentarze -->
+    <div id="commentsContainer">
+        <!-- Komentarze będą tutaj -->
+    </div>
+
+    <div style="margin-top: 30px">
+        <b>Przykład ataku XSS - symulacja wprowadzenia złośliwego skryptu przez
+            komentarz:</b>
+        <pre>
+    <!-- Przykład ataku XSS - symulacja wprowadzenia złośliwego skryptu przez komentarz -->
+    &lt;img src="nonexistent" onerror="alert('Uwaga! Złośliwy skrypt!');"&gt;
+        </pre>
+    </div>
+
+    <script>
+        // Funkcja dodająca komentarz do kontenera
+        function addComment(comment) {
+            const commentsContainer = document.getElementById("commentsContainer");
+            const newComment = document.createElement("p");
+            newComment.innerHTML = comment; // Używamy innerHTML, aby wstawić HTML bezpośrednio
+            commentsContainer.appendChild(newComment);
+        }
+
+        // Obsługa dodawania komentarza po kliknięciu przycisku
+        document
+            .getElementById("commentForm")
+            .addEventListener("submit", function (event) {
+                event.preventDefault(); // Zapobiegamy domyślnej akcji formularza (przeładowaniu strony)
+                const comment = document.getElementById("comment").value;
+                addComment(comment); // Dodajemy komentarz do kontenera
+                document.getElementById("comment").value = ""; // Czyścimy pole wprowadzania
+            });
+
+        // Przykład ataku XSS - symulacja wprowadzenia złośliwego skryptu przez komentarz
+        const maliciousComment = `<img src="nonexistent" onerror="alert('Uwaga! Złośliwy skrypt!');">`;
+        // addComment(maliciousComment);
+    </script>
+</body>
+
+</html>
